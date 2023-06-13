@@ -134,6 +134,37 @@ wss.on("connection", function connection(ws) {
         })
         .catch(console.error)
     }
+    else if (data.operation === "readMessages") {
+      // conversationId, userId
+      axiosRequest({
+        method: "patch",
+        url: `/conversations/${data.conversationId}/read`,
+        headers: {
+          Authorization: `Bearer ${userToken}`,
+        },
+        data: {
+          user: data.userId
+        }
+      })
+        .then(res => {
+          res.data.users.forEach((user: string) => {
+            if (usersIdWs[user])
+              usersIdWs[user].send(JSON.stringify(
+                {
+                  operation: "messagesReaded",
+                  data: {
+                    user: data.userId
+                  }
+                })
+              )
+            else {
+              // TO DO send notification
+              console.log("send notification")
+            }
+          })
+        })
+        .catch(console.error)
+    }
   });
 
   ws.on("close", () => {
