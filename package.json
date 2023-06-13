@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.ts",
   "scripts": {
-    "start": "NODE_ENV=local nodemon index.ts"
+    "start": "NODE_ENV=local nodemon index.ts",
+    "start-prod": "NODE_ENV=production ts-node index.ts"
   },
   "repository": "git@github.com:generation-dlc/ws.git",
   "author": "hadjadji mohamed <hadjadjirayane@outlook.fr>",
