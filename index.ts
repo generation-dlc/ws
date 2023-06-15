@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 dotenv.config();
 import WebSocket from "ws"
 const wss = new WebSocket.Server({ port: 4000 })
-import uuid from "uuid"
+import { v4 as uuidv4 } from 'uuid';
 import axios from "axios"
 
 const axiosRequest = axios.create({
@@ -15,13 +15,13 @@ let usersIdWs: any = {}
 
 wss.on("connection", function connection(ws) {
   // @ts-ignore
-  ws["id"] = uuid.v4()
+  ws["id"] = uuidv4()
   let firstTime = true
   let userToken = ""
 
-  // ws.on("open", function open() {
-  //     console.log("open")
-  // });
+  ws.on("open", function open() {
+    console.log("open")
+  });
 
   ws.on("message", async function (data: any) {
     data = JSON.parse(data)
@@ -30,16 +30,18 @@ wss.on("connection", function connection(ws) {
     if (firstTime) {
       // token
       firstTime = false
-      userToken = data.token
 
       axiosRequest({
-        method: "delete",
-        url: "/who-am-i",
+        method: "get",
+        url: "/users/who-am-i",
         headers: {
-          Authorization: `Bearer ${userToken}`,
+          Authorization: `Bearer ${data.token}`,
         }
       })
-        .then(res => usersIdWs[res.data._id] = ws)
+        .then(res => {
+          userToken = data.token
+          usersIdWs[res.data._id] = ws
+        })
         .catch((err) => {
           console.error(err)
           ws.close()
@@ -88,13 +90,13 @@ wss.on("connection", function connection(ws) {
         }
       })
         .then(res => {
-          res.data.users.forEach((user: string) => {
+          res.data.conversation.users.forEach((user: string) => {
             if (usersIdWs[user])
               usersIdWs[user].send(JSON.stringify(
                 {
                   operation: "addMessage",
                   data: {
-                    text: data.text
+                    message: res.data.message,
                   }
                 })
               )
@@ -141,9 +143,6 @@ wss.on("connection", function connection(ws) {
         url: `/conversations/${data.conversationId}/read`,
         headers: {
           Authorization: `Bearer ${userToken}`,
-        },
-        data: {
-          user: data.userId
         }
       })
         .then(res => {
