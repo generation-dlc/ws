@@ -158,7 +158,8 @@ wss.on("connection", function connection(ws) {
                   operation: "messagesReaded",
                   data: {
                     sid: uuidv4(),
-                    user: data.userId
+                    user: data.userId,
+                    conversation: data.conversationId
                   }
                 })
               )
