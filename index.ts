@@ -66,7 +66,10 @@ wss.on("connection", function connection(ws) {
               usersIdWs[user].send(JSON.stringify(
                 {
                   operation: "conversationCreated",
-                  data: res.data
+                  data: {
+                    sid: uuidv4(),
+                    ...res.data
+                  }
                 })
               )
             else {
@@ -96,6 +99,7 @@ wss.on("connection", function connection(ws) {
                 {
                   operation: "addMessage",
                   data: {
+                    sid: uuidv4(),
                     message: res.data.message,
                   }
                 })
@@ -124,6 +128,7 @@ wss.on("connection", function connection(ws) {
                 {
                   operation: "removeMessage",
                   data: {
+                    sid: uuidv4(),
                     messageId: data.messageId
                   }
                 })
@@ -152,6 +157,7 @@ wss.on("connection", function connection(ws) {
                 {
                   operation: "messagesReaded",
                   data: {
+                    sid: uuidv4(),
                     user: data.userId
                   }
                 })
