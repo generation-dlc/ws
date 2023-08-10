@@ -63,79 +63,36 @@ wss.on("connection", function connection(ws) {
     }
     else if (data.operation === "createConversation") {
       // users, message
-      // verify if conversation already exist
       axiosRequest({
-        method: "get",
-        url: "/conversations/search-by-users?users=" + data.users.toString(),
+        method: "post",
+        url: "/conversations",
         headers: {
           Authorization: `Bearer ${userToken}`,
+        },
+        data: {
+          users: data.users, // [_id, _id, _id]
+          message: data.message // messages text
         }
       })
-        .then((res: any) => {
-          // if conversation exist => add a message to it
-          axiosRequest({
-            method: "post",
-            url: `/conversations/${res.data._id}`,
-            headers: {
-              Authorization: `Bearer ${userToken}`,
-            },
-            data: {
-              text: data.message
+        .then(res => {
+          data.users.forEach((user: string) => {
+            if (usersIdWs[user])
+              usersIdWs[user].send(JSON.stringify(
+                {
+                  operation: "conversationCreated",
+                  data: {
+                    sid: uuidv4(),
+                    ...res.data
+                  }
+                })
+              )
+            else {
+              // TO DO send notification
+              console.log("send notification")
             }
           })
-            .then(res => {
-              res.data.conversation.users.forEach((user: string) => {
-                if (usersIdWs[user])
-                  usersIdWs[user].send(JSON.stringify(
-                    {
-                      operation: "addMessage",
-                      data: {
-                        sid: uuidv4(),
-                        ...res.data
-                      }
-                    })
-                  )
-                else {
-                  // TO DO send notification
-                  console.log("send notification")
-                }
-              })
-            })
-            .catch(console.error)
         })
-        .catch((err) => {
-          // if conversation doesn't exist
-          axiosRequest({
-            method: "post",
-            url: "/conversations",
-            headers: {
-              Authorization: `Bearer ${userToken}`,
-            },
-            data: {
-              users: data.users, // [_id, _id, _id]
-              message: data.message // messages text
-            }
-          })
-            .then(res => {
-              data.users.forEach((user: string) => {
-                if (usersIdWs[user])
-                  usersIdWs[user].send(JSON.stringify(
-                    {
-                      operation: "conversationCreated",
-                      data: {
-                        sid: uuidv4(),
-                        ...res.data
-                      }
-                    })
-                  )
-                else {
-                  // TO DO send notification
-                  console.log("send notification")
-                }
-              })
-            })
-            .catch(console.error)
-        })
+        .catch(console.error)
     }
     else if (data.operation === "addMessage") {
       // conversationId, text
