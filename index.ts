@@ -1,9 +1,23 @@
 import dotenv from "dotenv";
 dotenv.config();
+import { createServer } from "https";
+import { readFileSync } from "fs";
 import WebSocket from "ws"
-const wss = new WebSocket.Server({ port: 4000 })
 import { v4 as uuidv4 } from 'uuid';
 import axios from "axios"
+
+let server: any = {}
+if (process.env.NODE_ENV !== "local")
+  server = createServer({
+    cert: readFileSync(process.env.CERT_PATH),
+    key: readFileSync(process.env.KEY_PATH)
+  });
+
+const wss = new WebSocket.Server(
+  process.env.NODE_ENV === "local"
+    ? { port: 4000 }
+    : { server }
+)
 
 const axiosRequest = axios.create({
   baseURL: process.env.API_URL,
@@ -226,3 +240,6 @@ wss.on("connection", function connection(ws) {
     }
   });
 })
+
+if (process.env.NODE_ENV !== "local")
+  server.listen(4000);
