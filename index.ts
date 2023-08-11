@@ -78,13 +78,21 @@ wss.on("connection", function connection(ws) {
           data.users.forEach((user: string) => {
             if (usersIdWs[user])
               usersIdWs[user].send(JSON.stringify(
-                {
-                  operation: "conversationCreated",
-                  data: {
-                    sid: uuidv4(),
-                    ...res.data
+                res.data.message
+                  ? {
+                    operation: "addMessage",
+                    data: {
+                      sid: uuidv4(),
+                      ...res.data
+                    }
                   }
-                })
+                  : {
+                    operation: "conversationCreated",
+                    data: {
+                      sid: uuidv4(),
+                      ...res.data
+                    }
+                  })
               )
             else {
               // TO DO send notification
@@ -107,7 +115,7 @@ wss.on("connection", function connection(ws) {
         }
       })
         .then(res => {
-          res.data.conversation.users.forEach((user: string) => {
+          res.data.users.forEach((user: string) => {
             if (usersIdWs[user])
               usersIdWs[user].send(JSON.stringify(
                 {
