@@ -95,8 +95,26 @@ wss.on("connection", function connection(ws) {
                   })
               )
             else {
-              // TO DO send notification
-              console.log("send notification")
+              // send a notification
+              axiosRequest({
+                method: "post",
+                url: "/send-notification",
+                headers: {
+                  Authorization: `Bearer ${userToken}`,
+                },
+                data: {
+                  users: user, // [_id]
+                  notification: {
+                    body: data.message, // messages text
+                    data: {
+                      notificationType: "NEW_MESSAGE",
+                      resourceId: res.data._id // conversation id
+                    }
+                  }
+                }
+              })
+                .then(res => { })
+                .catch(console.error)
             }
           })
         })
@@ -127,8 +145,26 @@ wss.on("connection", function connection(ws) {
                 })
               )
             else {
-              // TO DO send notification
-              console.log("send notification")
+              // send a notification
+              axiosRequest({
+                method: "post",
+                url: "/send-notification",
+                headers: {
+                  Authorization: `Bearer ${userToken}`,
+                },
+                data: {
+                  users: user, // [_id]
+                  notification: {
+                    body: data.message, // messages text
+                    data: {
+                      notificationType: "NEW_MESSAGE",
+                      resourceId: data.conversationId // conversation id
+                    }
+                  }
+                }
+              })
+                .then(res => { })
+                .catch(console.error)
             }
           })
         })
@@ -156,8 +192,27 @@ wss.on("connection", function connection(ws) {
                 })
               )
             else {
-              // TO DO send notification
-              console.log("send notification")
+              // send a notification
+              axiosRequest({
+                method: "post",
+                url: "/send-notification",
+                headers: {
+                  Authorization: `Bearer ${userToken}`,
+                },
+                data: {
+                  users: user, // [_id]
+                  notification: {
+                    title: "Generation",
+                    body: "Message retiré",
+                    data: {
+                      notificationType: "REMOVE_MESSAGE",
+                      resourceId: data.conversationId // conversation id
+                    }
+                  }
+                }
+              })
+                .then(res => { })
+                .catch(console.error)
             }
           })
         })
@@ -185,10 +240,6 @@ wss.on("connection", function connection(ws) {
                   }
                 })
               )
-            else {
-              // TO DO send notification
-              console.log("send notification")
-            }
           })
         })
         .catch(console.error)
