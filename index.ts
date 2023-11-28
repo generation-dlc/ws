@@ -103,7 +103,7 @@ wss.on("connection", function connection(ws) {
                   Authorization: `Bearer ${userToken}`,
                 },
                 data: {
-                  users: user, // [_id]
+                  users: [user], // [_id]
                   notification: {
                     body: data.message, // messages text
                   },
@@ -153,7 +153,7 @@ wss.on("connection", function connection(ws) {
                   Authorization: `Bearer ${userToken}`,
                 },
                 data: {
-                  users: user, // [_id]
+                  users: [user], // [_id]
                   notification: {
                     body: data.message, // messages text
                   },
@@ -200,7 +200,7 @@ wss.on("connection", function connection(ws) {
                   Authorization: `Bearer ${userToken}`,
                 },
                 data: {
-                  users: user, // [_id]
+                  users: [user], // [_id]
                   notification: {
                     title: "Generation",
                     body: "Message retiré",
