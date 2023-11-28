@@ -94,28 +94,27 @@ wss.on("connection", function connection(ws) {
                     }
                   })
               )
-            else {
-              // send a notification
-              axiosRequest({
-                method: "post",
-                url: "/send-notification",
-                headers: {
-                  Authorization: `Bearer ${userToken}`,
+
+            // send a notification
+            axiosRequest({
+              method: "post",
+              url: "/send-notification",
+              headers: {
+                Authorization: `Bearer ${userToken}`,
+              },
+              data: {
+                users: [user], // [_id]
+                notification: {
+                  body: data.message, // messages text
                 },
                 data: {
-                  users: [user], // [_id]
-                  notification: {
-                    body: data.message, // messages text
-                  },
-                  data: {
-                    notificationType: "NEW_MESSAGE",
-                    resourceId: res.data._id.toString() // conversation id
-                  }
+                  notificationType: "NEW_MESSAGE",
+                  resourceId: res.data._id.toString() // conversation id
                 }
-              })
-                .then(res => { })
-                .catch(console.error)
-            }
+              }
+            })
+              .then(res => { })
+              .catch(console.error)
           })
         })
         .catch(console.error)
@@ -144,28 +143,27 @@ wss.on("connection", function connection(ws) {
                   }
                 })
               )
-            else {
-              // send a notification
-              axiosRequest({
-                method: "post",
-                url: "/send-notification",
-                headers: {
-                  Authorization: `Bearer ${userToken}`,
+
+            // send a notification
+            axiosRequest({
+              method: "post",
+              url: "/send-notification",
+              headers: {
+                Authorization: `Bearer ${userToken}`,
+              },
+              data: {
+                users: [user], // [_id]
+                notification: {
+                  body: data.text, // messages text
                 },
                 data: {
-                  users: [user], // [_id]
-                  notification: {
-                    body: data.message, // messages text
-                  },
-                  data: {
-                    notificationType: "NEW_MESSAGE",
-                    resourceId: data.conversationId.toString() // conversation id
-                  }
+                  notificationType: "NEW_MESSAGE",
+                  resourceId: data.conversationId.toString() // conversation id
                 }
-              })
-                .then(res => { })
-                .catch(console.error)
-            }
+              }
+            })
+              .then(res => { })
+              .catch(console.error)
           })
         })
         .catch(console.error)
@@ -191,29 +189,28 @@ wss.on("connection", function connection(ws) {
                   }
                 })
               )
-            else {
-              // send a notification
-              axiosRequest({
-                method: "post",
-                url: "/send-notification",
-                headers: {
-                  Authorization: `Bearer ${userToken}`,
+
+            // send a notification
+            axiosRequest({
+              method: "post",
+              url: "/send-notification",
+              headers: {
+                Authorization: `Bearer ${userToken}`,
+              },
+              data: {
+                users: [user], // [_id]
+                notification: {
+                  title: "Generation",
+                  body: "Message retiré",
                 },
                 data: {
-                  users: [user], // [_id]
-                  notification: {
-                    title: "Generation",
-                    body: "Message retiré",
-                  },
-                  data: {
-                    notificationType: "REMOVE_MESSAGE",
-                    resourceId: data.conversationId.toString() // conversation id
-                  }
+                  notificationType: "REMOVE_MESSAGE",
+                  resourceId: data.conversationId.toString() // conversation id
                 }
-              })
-                .then(res => { })
-                .catch(console.error)
-            }
+              }
+            })
+              .then(res => { })
+              .catch(console.error)
           })
         })
         .catch(console.error)
