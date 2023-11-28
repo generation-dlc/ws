@@ -106,10 +106,10 @@ wss.on("connection", function connection(ws) {
                   users: user, // [_id]
                   notification: {
                     body: data.message, // messages text
-                    data: {
-                      notificationType: "NEW_MESSAGE",
-                      resourceId: res.data._id // conversation id
-                    }
+                  },
+                  data: {
+                    notificationType: "NEW_MESSAGE",
+                    resourceId: res.data._id.toString() // conversation id
                   }
                 }
               })
@@ -156,10 +156,10 @@ wss.on("connection", function connection(ws) {
                   users: user, // [_id]
                   notification: {
                     body: data.message, // messages text
-                    data: {
-                      notificationType: "NEW_MESSAGE",
-                      resourceId: data.conversationId // conversation id
-                    }
+                  },
+                  data: {
+                    notificationType: "NEW_MESSAGE",
+                    resourceId: data.conversationId.toString() // conversation id
                   }
                 }
               })
@@ -204,10 +204,10 @@ wss.on("connection", function connection(ws) {
                   notification: {
                     title: "Generation",
                     body: "Message retiré",
-                    data: {
-                      notificationType: "REMOVE_MESSAGE",
-                      resourceId: data.conversationId // conversation id
-                    }
+                  },
+                  data: {
+                    notificationType: "REMOVE_MESSAGE",
+                    resourceId: data.conversationId.toString() // conversation id
                   }
                 }
               })
