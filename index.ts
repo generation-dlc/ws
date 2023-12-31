@@ -62,7 +62,7 @@ wss.on("connection", function connection(ws) {
         })
     }
     else if (data.operation === "createConversation") {
-      // users, message, titleNotification
+      // users, title, message
       axiosRequest({
         method: "post",
         url: "/conversations",
@@ -106,7 +106,7 @@ wss.on("connection", function connection(ws) {
                 data: {
                   users: [user], // [_id]
                   notification: {
-                    title: data.titleNotification,
+                    title: data.title,
                     body: data.message, // messages text
                   },
                   data: {
